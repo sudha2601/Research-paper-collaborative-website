@@ -16,7 +16,6 @@ function Login() {
     reset,
   } = useForm()
    
-  console.log("ENV:", import.meta.env.VITE_BACKEND_URL);
   const [showPassword, setShowPassword] = useState(false)
   const navigate = useNavigate()
 
