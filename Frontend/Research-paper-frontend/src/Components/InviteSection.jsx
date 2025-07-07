@@ -11,7 +11,7 @@ const InviteSection = ({ groups, selectedGroup, setSelectedGroup, token }) => {
     if (query.length < 2 || !selectedGroup) return
     try {
       const res = await axios.get(
-        `http://localhost:5000/api/invites/search?query=${query}`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/invites/search?query=${query}`,
         { headers: authHeader }
       )
       setSearchResults(res.data)
@@ -23,7 +23,7 @@ const InviteSection = ({ groups, selectedGroup, setSelectedGroup, token }) => {
   const sendInvite = async (toUserId) => {
     try {
       await axios.post(
-        'http://localhost:5000/api/invites/send',
+        `${import.meta.env.VITE_BACKEND_URL}/api/invites/send`,
         { toUserId, groupId: selectedGroup },
         { headers: authHeader }
       )

@@ -23,9 +23,12 @@ const PdfViewer = ({ pdfUrl, pdfId, setNumPages }) => {
     const fetchUser = async () => {
       try {
         const token = localStorage.getItem('token');
-        const res = await axios.get('http://localhost:5000/api/user', {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const res = await axios.get(
+          `${import.meta.env.VITE_BACKEND_URL}/api/user`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
         setCurrentUser(res.data.user);
       } catch (err) {
         console.error('Failed to fetch user', err);
@@ -39,7 +42,7 @@ const PdfViewer = ({ pdfUrl, pdfId, setNumPages }) => {
     try {
       const token = localStorage.getItem('token');
       const res = await axios.get(
-        `http://localhost:5000/api/highlights/list?pdfId=${encodeURIComponent(pdfId)}`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/highlights/list?pdfId=${encodeURIComponent(pdfId)}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       const normalized = res.data.map(h => ({ ...h, id: h._id }));
@@ -56,7 +59,7 @@ const PdfViewer = ({ pdfUrl, pdfId, setNumPages }) => {
   // Socket for real-time update
   useEffect(() => {
     if (socketRef.current) return;
-    const socket = io('http://localhost:5000');
+    const socket = io(import.meta.env.VITE_BACKEND_URL);
     socketRef.current = socket;
 
     socket.on('refreshData', () => {
@@ -115,7 +118,7 @@ const PdfViewer = ({ pdfUrl, pdfId, setNumPages }) => {
     try {
       const token = localStorage.getItem('token');
       await axios.post(
-        'http://localhost:5000/api/highlights/add',
+        `${import.meta.env.VITE_BACKEND_URL}/api/highlights/add`,
         {
           pdfId,
           position: selectionBox,
@@ -140,7 +143,7 @@ const PdfViewer = ({ pdfUrl, pdfId, setNumPages }) => {
   const deleteHighlight = async (id) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.delete(`http://localhost:5000/api/highlights/delete/${id}`, {
+      await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/highlights/delete/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       // Refresh happens via socket

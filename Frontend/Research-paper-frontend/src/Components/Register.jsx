@@ -13,7 +13,7 @@ function Register() {
 
   const onSubmit = async (data) => {
     try {
-      const res = await axios.post('http://localhost:5000/api/register', data)
+      const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/register`, data)
       const token = res.data.token
       localStorage.setItem('token', token)
       toast.success('Registered successfully!')
@@ -115,7 +115,7 @@ function Register() {
           <GoogleLogin
             onSuccess={async (credentialResponse) => {
               try {
-                const res = await axios.post('http://localhost:5000/api/google-login', {
+                const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/google-login`, {
                   token: credentialResponse.credential,
                 })
                 const token = res.data.token

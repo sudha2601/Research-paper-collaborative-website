@@ -20,7 +20,7 @@ const Creategroup = ({ onGroupChange }) => {
       if (!query) return;
       setLoading(true);
       try {
-        const res = await axios.get(`http://localhost:5000/api/invites/search?query=${query}`, {
+        const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/invites/search?query=${query}`, {
           headers: authHeader,
         });
         setSearchResults(res.data);
@@ -63,7 +63,7 @@ const Creategroup = ({ onGroupChange }) => {
     setCreating(true);
     try {
       const groupRes = await axios.post(
-        'http://localhost:5000/api/groups/create',
+        `${import.meta.env.VITE_BACKEND_URL}/api/groups/create`,
         { name: form.name, description: form.description },
         { headers: authHeader }
       );
@@ -73,7 +73,7 @@ const Creategroup = ({ onGroupChange }) => {
       await Promise.all(
         selectedUsers.map((user) =>
           axios.post(
-            'http://localhost:5000/api/invites/send',
+            `${import.meta.env.VITE_BACKEND_URL}/api/invites/send`,
             { groupId: group._id, toUserId: user._id },
             { headers: authHeader }
           )

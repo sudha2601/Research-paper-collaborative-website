@@ -15,7 +15,8 @@ function Login() {
     formState: { errors },
     reset,
   } = useForm()
-
+   
+  console.log("ENV:", import.meta.env.VITE_BACKEND_URL);
   const [showPassword, setShowPassword] = useState(false)
   const navigate = useNavigate()
 
@@ -38,31 +39,34 @@ function Login() {
   }, [navigate])
 
   const onSubmit = async (data) => {
-  try {
-    const res = await axios.post('http://localhost:5000/api/login', data)
-    const token = res.data.token
-    localStorage.setItem('token', token)
-    toast.success('Login successful!')
-    setTimeout(() => {
-      navigate('/user')
-      reset()
-    }, 1500)
-  } catch (err) {
-    const message = err?.response?.data?.message || 'Login failed'
-    console.error('Login error:', message)
-
-    if (message === 'User does not exist. Please register first.') {
-      toast.warn('User not found. Redirecting to Register...')
+    try {
+      const res = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/api/login`,
+        data
+      )
+      const token = res.data.token
+      localStorage.setItem('token', token)
+      toast.success('Login successful!')
       setTimeout(() => {
-        navigate('/register')
-      }, 2000)
-    } else if (message === 'Invalid password') {
-      toast.error('Invalid password. Try again.')
-    } else {
-      toast.error(message)
+        navigate('/user')
+        reset()
+      }, 1500)
+    } catch (err) {
+      const message = err?.response?.data?.message || 'Login failed'
+      console.error('Login error:', message)
+
+      if (message === 'User does not exist. Please register first.') {
+        toast.warn('User not found. Redirecting to Register...')
+        setTimeout(() => {
+          navigate('/register')
+        }, 2000)
+      } else if (message === 'Invalid password') {
+        toast.error('Invalid password. Try again.')
+      } else {
+        toast.error(message)
+      }
     }
   }
-}
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-200 via-purple-100 to-pink-200 px-4">
@@ -139,9 +143,12 @@ function Login() {
             <GoogleLogin
               onSuccess={async (credentialResponse) => {
                 try {
-                  const res = await axios.post('http://localhost:5000/api/google-login', {
-                    token: credentialResponse.credential,
-                  })
+                  const res = await axios.post(
+                    `${import.meta.env.VITE_BACKEND_URL}/api/google-login`,
+                    {
+                      token: credentialResponse.credential,
+                    }
+                  )
                   const token = res.data.token
                   localStorage.setItem('token', token)
                   toast.success('Google login successful!')

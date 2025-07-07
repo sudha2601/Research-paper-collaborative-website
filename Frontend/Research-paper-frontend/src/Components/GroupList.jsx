@@ -5,14 +5,18 @@ import { Trash2 } from 'lucide-react';
 
 const GroupList = ({ groups, onDelete, userId }) => {
   const navigate = useNavigate();
+  groups = Array.isArray(groups) ? groups : [];
 
   const handleDelete = async (groupId) => {
     if (!window.confirm('Are you sure you want to delete this group?')) return;
     try {
       const token = localStorage.getItem('token');
-      await axios.delete(`http://localhost:5000/api/groups/${groupId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await axios.delete(
+        `${import.meta.env.VITE_BACKEND_URL}/api/groups/${groupId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       if (onDelete) onDelete(groupId);
     } catch (err) {
       alert(err.response?.data?.message || 'Failed to delete group.');

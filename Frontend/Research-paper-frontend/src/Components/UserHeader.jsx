@@ -10,6 +10,7 @@ const UserHeader = ({
   rejectInvite,
 }) => {
   const navigate = useNavigate();
+  notifications = Array.isArray(notifications) ? notifications : [];
 
   const handleLogout = () => {
     localStorage.removeItem('token');

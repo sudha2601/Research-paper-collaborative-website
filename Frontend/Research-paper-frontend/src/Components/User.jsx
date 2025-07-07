@@ -72,10 +72,10 @@ const User = () => {
       if (!token) return;
       try {
         const [userRes, inviteRes] = await Promise.all([
-          axios.get('http://localhost:5000/api/user', {
+          axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/user`, {
             headers: { Authorization: `Bearer ${token}` },
           }),
-          axios.get('http://localhost:5000/api/invites/pending', {
+          axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/invites/pending`, {
             headers: { Authorization: `Bearer ${token}` },
           }),
         ]);
@@ -92,7 +92,7 @@ const User = () => {
   // Fetch groups (always up-to-date)
   const fetchGroups = useCallback(async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/groups/my', {
+      const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/groups/my`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setGroups(res.data);
@@ -109,7 +109,7 @@ const User = () => {
   // Fetch invites (for bell)
   const fetchInvites = useCallback(async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/invites/pending', {
+      const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/invites/pending`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setNotifications(res.data);
@@ -121,7 +121,7 @@ const User = () => {
   // Accept invite (update state in User.jsx)
   const acceptInvite = async (inviteId) => {
     try {
-      await axios.post(`http://localhost:5000/api/invites/accept/${inviteId}`, {}, {
+      await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/invites/accept/${inviteId}`, {}, {
         headers: { Authorization: `Bearer ${token}` },
       });
       await fetchInvites();
@@ -134,7 +134,7 @@ const User = () => {
   // Reject invite (update state in User.jsx)
   const rejectInvite = async (inviteId) => {
     try {
-      await axios.post(`http://localhost:5000/api/invites/reject/${inviteId}`, {}, {
+      await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/invites/reject/${inviteId}`, {}, {
         headers: { Authorization: `Bearer ${token}` },
       });
       await fetchInvites();
@@ -146,7 +146,7 @@ const User = () => {
   // --- FIX: Always connect socket on mount, not after user is set ---
   useEffect(() => {
     if (socketRef.current) return; // Prevent multiple connections
-    const socket = io('http://localhost:5000');
+    const socket = io(import.meta.env.VITE_BACKEND_URL);
     socketRef.current = socket;
 
     socket.on('refreshData', () => {

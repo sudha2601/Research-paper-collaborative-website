@@ -26,7 +26,7 @@ const Maingroup = () => {
     const fetchGroupName = async () => {
       try {
         const token = localStorage.getItem('token');
-        const res = await axios.get(`http://localhost:5000/api/groups/${groupId}`, {
+        const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/groups/${groupId}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setGroupName(res.data.name || 'Group');
@@ -41,7 +41,7 @@ const Maingroup = () => {
     setLoading(true);
     try {
       const token = localStorage.getItem('token');
-      const res = await axios.get(`http://localhost:5000/api/pdf/group/${groupId}`, {
+      const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/pdf/group/${groupId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setPdfs(res.data);
@@ -53,7 +53,7 @@ const Maingroup = () => {
 
   useEffect(() => {
     if (socketRef.current) return;
-    const socket = io('http://localhost:5000');
+    const socket = io(import.meta.env.VITE_BACKEND_URL);
     socketRef.current = socket;
 
     socket.on('refreshData', () => {
@@ -78,9 +78,12 @@ const Maingroup = () => {
       return null;
     }
     try {
-      const res = await axios.get('http://localhost:5000/api/user', {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const res = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/api/user`,
+        {
+          headers: { Authorization: `Bearer ${token}` }
+        }
+      );
       return res.data.user?._id || res.data.user?.id;
     } catch (err) {
       alert('Unable to fetch user info');
@@ -108,7 +111,7 @@ const Maingroup = () => {
     setLoading(true);
     try {
       const res = await axios.post(
-        'http://localhost:5000/api/pdf/upload',
+        `${import.meta.env.VITE_BACKEND_URL}/api/pdf/upload`,
         formData,
         {
           headers: {
@@ -132,7 +135,7 @@ const Maingroup = () => {
     setLoading(true);
     try {
       const token = localStorage.getItem('token');
-      await axios.delete(`http://localhost:5000/api/pdf/${pdfId}`, {
+      await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/pdf/${pdfId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       fetchPdfs();

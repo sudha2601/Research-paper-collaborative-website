@@ -3,7 +3,7 @@ import axios from 'axios';
 import { io } from 'socket.io-client';
 import { FaSmile } from 'react-icons/fa';
 
-const socket = io('http://localhost:5000');
+const socket = io(import.meta.env.VITE_BACKEND_URL);
 
 const Chat = ({ groupId }) => {
   const [messages, setMessages] = useState([]);
@@ -18,9 +18,12 @@ const Chat = ({ groupId }) => {
     const fetchUser = async () => {
       try {
         const token = localStorage.getItem('token');
-        const res = await axios.get('http://localhost:5000/api/user', {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const res = await axios.get(
+          `${import.meta.env.VITE_BACKEND_URL}/api/user`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
         setUsername(res.data.user.name);
       } catch (err) {
         console.error('Failed to fetch user', err);
@@ -32,10 +35,13 @@ const Chat = ({ groupId }) => {
   const fetchMessages = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get(`http://localhost:5000/api/chat/getchat`, {
-        headers: { Authorization: `Bearer ${token}` },
-        params: { groupID: groupId },
-      });
+      const response = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/api/chat/getchat`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+          params: { groupID: groupId },
+        }
+      );
       const sorted = response.data.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
       setMessages(sorted);
     } catch (error) {
@@ -49,7 +55,7 @@ const Chat = ({ groupId }) => {
     try {
       const token = localStorage.getItem('token');
       await axios.post(
-        'http://localhost:5000/api/chat/add',
+        `${import.meta.env.VITE_BACKEND_URL}/api/chat/add`,
         { text: input, createdBy: username, groupID: groupId },
         { headers: { Authorization: `Bearer ${token}` } }
       );
