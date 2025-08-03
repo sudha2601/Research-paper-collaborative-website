@@ -6,7 +6,7 @@ A web platform designed for researchers and students to collaborate seamlessly. 
 
 ## 🌐 Live Site
 
-👉 [Click here to visit the deployed website]([https://your-deployed-site-link.com](https://research-paper-collaborative-websit-five.vercel.app/))  
+👉 https://research-paper-collaborative-websit-five.vercel.app/
 
 ---
 
